@@ -1,0 +1,75 @@
+import random library
+
+Function initialize_game with parameter n_piles defaulting to 3:
+    Initialize an empty list called 'state'
+    Repeat n_piles times:
+        Append a random number between 1 and 7 to 'state'
+    Return 'state'
+
+Function display_state with parameter state:
+    Print "Current game state:"
+    For each pile in state with index i:
+        Print "Pile", i, ":", visual representation of pile, "(", number of objects in pile, ")"
+
+Function minimax with parameters state, alpha, beta, maximizingPlayer:
+    If sum of state is 0 (game over):
+        Return 1 if maximizingPlayer else -1
+
+    If maximizingPlayer is True:
+        Set maxEval to negative infinity
+        For each pile in state with index i:
+            If pile is not empty:
+                For remove from 1 to pile size:
+                    Copy 'state' to 'newState' and remove 'remove' objects from pile 'i'
+                    Calculate 'eval' by calling minimax on 'newState', alpha, beta, and False
+                    Set maxEval to maximum of maxEval and eval
+                    Set alpha to maximum of alpha and eval
+                    If beta is less than or equal to alpha, break
+        Return maxEval
+    Else:
+        Set minEval to positive infinity
+        For each pile in state with index i:
+            If pile is not empty:
+                For remove from 1 to pile size:
+                    Copy 'state' to 'newState' and remove 'remove' objects from pile 'i'
+                    Calculate 'eval' by calling minimax on 'newState', alpha, beta, and True
+                    Set minEval to minimum of minEval and eval
+                    Set beta to minimum of beta and eval
+                    If beta is less than or equal to alpha, break
+        Return minEval
+
+Function ai_move with parameter state:
+    Set bestEval to negative infinity
+    Set bestMove to None
+    For each pile in state with index i:
+        If pile is not empty:
+            For remove from 1 to pile size:
+                Copy 'state' to 'newState' and remove 'remove' objects from pile 'i'
+                Calculate 'eval' by calling minimax on 'newState', negative infinity, positive infinity, and False
+                If 'eval' is greater than bestEval:
+                    Set bestEval to 'eval'
+                    Set bestMove to tuple (i, remove)
+    Remove 'bestMove[1]' objects from pile 'bestMove[0]' in state
+    Print AI's action
+
+Function player_move with parameter state:
+    Ask player to choose a pile and store it in 'pile'
+    Ask player to choose number of objects to remove from the pile and store it in 'remove'
+    Remove 'remove' objects from 'pile' in state
+
+Function game_loop:
+    Set 'state' by calling initialize_game()
+    While sum of state is greater than 0:
+        Call display_state with 'state'
+        Call player_move with 'state'
+        If sum of state is 0:
+            Print "Player loses!"
+            Break
+        Call ai_move with 'state'
+        If sum of state is 0:
+            Print "AI loses!"
+            Break
+
+Main Program:
+    Call game_loop()
+    Print "Game over!"
